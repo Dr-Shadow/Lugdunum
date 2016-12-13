@@ -5,7 +5,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/lug/Window)
 set(SRC
     ${SRCROOT}/Window.cpp
 )
-source_group("src" FILES ${SRC})
 
 # all header files
 set(INC
@@ -14,7 +13,6 @@ set(INC
     ${INCROOT}/Window.hpp
     ${INCROOT}/WindowHandle.hpp
 )
-source_group("inc" FILES ${INC})
 
 if(LUG_OS_LINUX)
     list(APPEND INC ${SRCROOT}/Unix/WindowImplX11.hpp)
@@ -29,6 +27,9 @@ elseif(LUG_OS_WINDOWS)
 else()
     message(FATAL_ERROR "No window implementation for this platform")
 endif()
+
+source_group("src" FILES ${SRC})
+source_group("inc" FILES ${INC})
 
 # define the target
 lug_add_library(lug-window
