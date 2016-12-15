@@ -33,6 +33,7 @@
 #   - LUG_XXX_FOUND:           true if either the debug or release library of the xxx module is found
 # - LUG_LIBRARIES:    the list of all libraries corresponding to the required modules
 # - LUG_FOUND:        true if all the required modules are found
+# - LUG_BINARY_DIR:	  the path where Lugdunum dynamic libraries are located
 # - LUG_INCLUDE_DIR:  the path where Lugdunum headers are located (the directory containing the lug/Config.hpp file)
 #
 # example:
@@ -44,6 +45,11 @@
 # define the LUG_STATIC macro if static build was chosen
 if(LUG_STATIC_LIBRARIES)
     add_definitions(-DLUG_STATIC)
+endif()
+
+# set default MAJOR version if the user doesn't set one
+if(NOT LUG_VERSION_MAJOR)
+    set(LUG_VERSION_MAJOR 0)
 endif()
 
 # define the list of search paths for headers and libraries
@@ -64,6 +70,7 @@ find_path(LUG_INCLUDE_DIR lug/Config.hpp
           PATHS ${FIND_LUG_PATHS}
           CMAKE_FIND_ROOT_PATH_BOTH
 )
+message(STATUS "Found Lugdunum headers in ${LUG_INCLUDE_DIR}")
 
 set(LUG_FOUND TRUE) # will be set to false if one of the required modules is not found
 
@@ -142,16 +149,29 @@ foreach(FIND_LUG_COMPONENT ${LUG_FIND_COMPONENTS})
     else()
         if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_RELEASE)
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_RELEASE})
+            find_path(LUG_BINARY_DIR
+                      ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll
+                      PATH_SUFFIXES bin
+                      PATHS ${FIND_LUG_PATHS}
+                      CMAKE_FIND_ROOT_PATH_BOTH
+            )
         endif()
 
         if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_DEBUG)
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_DEBUG})
+            find_path(LUG_BINARY_DIR
+                      ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll
+                      PATH_SUFFIXES bin
+                      PATHS ${FIND_LUG_PATHS}
+                      CMAKE_FIND_ROOT_PATH_BOTH
+            )
         endif()
     endif()
 
     if (LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG OR LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
         # library found
         set(LUG_${FIND_LUG_COMPONENT_UPPER}_FOUND TRUE)
+        message(STATUS "Found LUG_${FIND_LUG_COMPONENT_UPPER}")
 
         # if both are found, set LUG_XXX_LIBRARY to contain both
         if (LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG AND LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
@@ -199,8 +219,7 @@ foreach(FIND_LUG_COMPONENT ${LUG_FIND_COMPONENTS})
 endforeach()
 
 if (LUG_FOUND)
-    message(STATUS "Found Lugdunum headers in ${LUG_INCLUDE_DIR}")
-    message(STATUS "Found Lugdunum libraries in ${LUG_LIBRARIES}")
+    message(STATUS "Found BINARY_DIR : ${LUG_BINARY_DIR}")
 else()
     # include directory or library not found
     set(FIND_LUG_ERROR "Could NOT find Lugdunum (missing: ${FIND_LUG_MISSING})")
