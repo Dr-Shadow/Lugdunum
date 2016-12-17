@@ -74,10 +74,10 @@ message(STATUS "Found Lugdunum headers in ${LUG_INCLUDE_DIR}")
 
 set(LUG_FOUND TRUE) # will be set to false if one of the required modules is not found
 
-if(LUG_OS_ANDROID)
     # this will append `lug-main` to the components to find if we are on WINDOWS or ANDROID
     # lug-main provides a wrapper for the main functions of Android and Windows to provide
     # an uniform int main(int ac, char *[]av) across platforms
+if(LUG_OS_ANDROID)
     list(APPEND LUG_FIND_COMPONENTS "main")
 endif()
 
@@ -149,22 +149,10 @@ foreach(FIND_LUG_COMPONENT ${LUG_FIND_COMPONENTS})
     else()
         if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_RELEASE)
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_RELEASE})
-            find_path(LUG_BINARY_DIR
-                      ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll
-                      PATH_SUFFIXES bin
-                      PATHS ${FIND_LUG_PATHS}
-                      CMAKE_FIND_ROOT_PATH_BOTH
-            )
         endif()
 
         if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_DEBUG)
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DYNAMIC_DEBUG})
-            find_path(LUG_BINARY_DIR
-                      ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll
-                      PATH_SUFFIXES bin
-                      PATHS ${FIND_LUG_PATHS}
-                      CMAKE_FIND_ROOT_PATH_BOTH
-            )
         endif()
     endif()
 
@@ -174,22 +162,43 @@ foreach(FIND_LUG_COMPONENT ${LUG_FIND_COMPONENTS})
         message(STATUS "Found LUG_${FIND_LUG_COMPONENT_UPPER}")
 
         # if both are found, set LUG_XXX_LIBRARY to contain both
-        if (LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG AND LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
+        if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG AND LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY debug ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG}
                                                         optimized ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE})
         endif()
 
         # if only one debug/release variant is found, set the other to be equal to the found one
-        if (LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG AND NOT LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
+        if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG AND NOT LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE)
             # debug and not release
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG})
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY         ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG})
         endif()
 
-        if (LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE AND NOT LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG)
+        if(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE AND NOT LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG)
             # release and not debug
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_DEBUG ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE})
             set(LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY       ${LUG_${FIND_LUG_COMPONENT_UPPER}_LIBRARY_RELEASE})
+        endif()
+ 
+        if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+            find_path(LUG_BINARY_DIR
+                      ${FIND_LUG_COMPONENT_NAME}-d-${LUG_VERSION_MAJOR}.dll
+                      PATH_SUFFIXES bin
+                      PATHS ${FIND_LUG_PATHS}
+                      CMAKE_FIND_ROOT_PATH_BOTH
+            )
+            if (NOT LUG_BINARY_DIR)
+            find_path(LUG_BINARY_DIR
+                      ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll
+                      PATH_SUFFIXES bin
+                      PATHS ${FIND_LUG_PATHS}
+                      CMAKE_FIND_ROOT_PATH_BOTH
+             )
+            endif()
+            if(NOT LUG_BINARY_DIR)
+                message(FATAL_ERROR "Could NOT find ${FIND_LUG_COMPONENT_NAME}-${LUG_VERSION_MAJOR}.dll")
+            endif()
+            message(STATUS "Found BINARY_DIR : ${LUG_BINARY_DIR}")
         endif()
     else()
         # library not found
@@ -218,9 +227,8 @@ foreach(FIND_LUG_COMPONENT ${LUG_FIND_COMPONENTS})
 
 endforeach()
 
-if (LUG_FOUND)
-    message(STATUS "Found BINARY_DIR : ${LUG_BINARY_DIR}")
-else()
+
+if (NOT LUG_FOUND)
     # include directory or library not found
     set(FIND_LUG_ERROR "Could NOT find Lugdunum (missing: ${FIND_LUG_MISSING})")
 
