@@ -43,7 +43,7 @@ General requirements:
         + [**Building**]
             - `mkdir build && cd build && cmake ../` 
             - `make -j 4`
-            - `sudo make isntall`
+            - `sudo make install`
         
 
 ![Windows](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Windows_logo_–_2012_%28dark_blue%29.svg/88px-Windows_logo_–_2012_%28dark_blue%29.svg.png) Windows
