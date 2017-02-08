@@ -1,6 +1,14 @@
 Building for Android, Linux and Windows:
 ----------------------------------------
 
+Target | Toolchain
+------------ | -------------
+Linux | gcc >= 6
+Linux | clang >= 3.8
+Windows 10 | Visual Studio 2015
+Windows 10 | Visual Studio 2017
+Android | NDK >= r13b + clang + Gradle >= 2.2
+
 General requirements:
 ---------------------
   
