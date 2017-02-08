@@ -40,7 +40,7 @@ General requirements:
         + [**Getting Cmake**]
             - `sudo apt-get install cmake`
         + [**Building**]
-            - `mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=gcc-6 -DCMAKE_C_COMPILER=gcc-6` 
+            - `mkdir build && cd build && cmake ../ -DCMAKE_C_COMPILER=gcc-6 -DCMAKE_CXX_COMPILER=gcc-6` 
             - `make -j`
             - `sudo make install`
         
