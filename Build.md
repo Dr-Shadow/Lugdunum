@@ -31,7 +31,6 @@ General requirements:
             - `sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
             - `sudo apt update`
             - `sudo apt install gcc-6`
-            - `export CC=gcc-6 export CXX=g++-6`
         + [**Getting libX11.so**]
             - `sudo apt-get install libxrandr-dev`
         + [**Getting LunarG SDK**]
@@ -41,7 +40,7 @@ General requirements:
         + [**Getting Cmake**]
             - `sudo apt-get install cmake`
         + [**Building**]
-            - `mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-3.8 -DCMAKE_C_COMPILER=clang-3.8` 
+            - `mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=gcc-6 -DCMAKE_C_COMPILER=gcc-6` 
             - `make -j 4`
             - `sudo make install`
         
