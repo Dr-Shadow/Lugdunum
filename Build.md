@@ -41,7 +41,7 @@ General requirements:
         + [**Getting Cmake**]
             - `sudo apt-get install cmake`
         + [**Building**]
-            - `mkdir build && cd build && cmake ../` 
+            - `mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-3.8 -DCMAKE_C_COMPILER=clang-3.8` 
             - `make -j 4`
             - `sudo make install`
         
