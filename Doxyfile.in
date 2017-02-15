@@ -327,3 +327,11 @@ GENERATE_LEGEND        = YES
 # This tag requires that the tag HAVE_DOT is set to YES.
 
 DOT_CLEANUP            = YES
+
+
+# Custom theme for webpages
+
+HTML_HEADER            = header.html
+HTML_FOOTER            = footer.html
+HTML_EXTRA_STYLESHEET  = ../customdoxygen.css
+HTML_EXTRA_FILES       = ../doxy-boot.js
