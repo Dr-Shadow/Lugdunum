@@ -49,7 +49,6 @@ if(ANDROID)
     set(LIB_SUFFIX "/${ANDROID_ABI}")
 endif()
 
-
 # project name
 project(Lugdunum C CXX)
 
