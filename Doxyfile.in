@@ -14,7 +14,8 @@ STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
 INPUT                  = @doxy_main_page@ \
                          @PROJECT_SOURCE_DIR@/include \
                          @PROJECT_SOURCE_DIR@/src \
-                         @PROJECT_SOURCE_DIR@/doc
+                         @PROJECT_SOURCE_DIR@/doc \
+TAGFILES		 = @PROJECT_SOURCE_DIR@/Build.md
 FILE_PATTERNS          = *.hpp \
                          *.inl \
                          *.cpp \
