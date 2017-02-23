@@ -8,6 +8,7 @@ endif()
 # project name
 project(hello)
 
+
 # include macros
 include(${PROJECT_SOURCE_DIR}/../Macros.cmake)
 
@@ -35,29 +36,24 @@ endif()
 
 string(REPLACE ";" " " "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS}")
 
-if(ANDROID_NATIVE_API_LEVEL EQUAL 23)
-    set(LUG_STATIC_LIBRARIES true)
-endif()
-
 # find Lugdunum and link with it
 find_package(LUG REQUIRED core graphics system window math)
 
 include_directories(${LUG_INCLUDE_DIR})
 include_directories(include)
 
-set(SHADERS
-    shader.vert
-    shader-directional.frag
-    shader-point.frag
-    shader-spot.frag)
 
 if(LUG_OS_ANDROID)
+    message(STATUS "ANDROID")
+
     add_library(${EXECUTABLE_NAME}
                 SHARED
-                main.cpp
+                include/Application.hpp
+                src/Application.cpp
+                src/main.cpp
     )
 
-    compile_shaders(${EXECUTABLE_NAME} ${SHADERS})
+
     target_link_libraries(${EXECUTABLE_NAME}
                           log
                           android
@@ -65,9 +61,6 @@ if(LUG_OS_ANDROID)
     )
 else()
     add_executable(${EXECUTABLE_NAME} include/Application.hpp src/Application.cpp src/main.cpp)
-    compile_shaders(${EXECUTABLE_NAME} ${SHADERS})
     target_link_libraries(${EXECUTABLE_NAME} ${LUG_LIBRARIES})
 endif()
 
-# install models
-file(COPY ${LUG_RESOURCES_DIR}/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

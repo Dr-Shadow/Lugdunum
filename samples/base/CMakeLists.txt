@@ -29,10 +29,6 @@ endif()
 
 string(REPLACE ";" " " "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS}")
 
-if(ANDROID_NATIVE_API_LEVEL EQUAL 23)
-    set(LUG_STATIC_LIBRARIES true)
-endif()
-
 
 # find Lugdunum and link with it
 find_package(LUG REQUIRED window system)

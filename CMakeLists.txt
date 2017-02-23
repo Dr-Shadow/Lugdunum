@@ -24,26 +24,16 @@ if(ANDROID)
     message(STATUS "ANDROID_TOOLCHAIN : ${ANDROID_TOOLCHAIN}")
 
     lug_set_option(ANDROID_PLATFORM android-24 STRING "Target specific android version target (default : android-24)")
-    if(NOT ANDROID_PLATFORM MATCHES android-2[3-9])
+    if(NOT ANDROID_PLATFORM MATCHES android-2[4-9])
         message(FATAL_ERROR "Invalid android version target : ${ANDROID_PLATFORM}")
     endif()
     message(STATUS "ANDROID_PLATFORM : ${ANDROID_PLATFORM}")
-
-    if(ANDROID_PLATFORM MATCHES android-23)
-        message(STATUS "target android-23, forcing static lib")
-        set(BUILD_SHARED_LIBS false)
-    endif()
 
     lug_set_option(ANDROID_STL c++_shared STRING "Choose which Android STL to use (default : c++_shared)")
 
     if(NOT ANDROID_STL STREQUAL c++_static AND NOT ANDROID_STL STREQUAL c++_shared)
         message(FATAL_ERROR "Invalid STL : ${ANDROID_STL}")
     endif()
-
-    if(ANDROID_PLATFORM STREQUAL android-23 AND ANDROID_STL STREQUAL c++_shared)
-        message(FATAL_ERROR "android-23 and c++_shared are mutually exclusive")
-    endif()
-    message(STATUS "ANDROID_STL : ${ANDROID_STL}")
 
     set(ANDROID_CPP_FEATURES "rtti exceptions")
     message(STATUS "ANDROID_CPP_FEATURES : ${ANDROID_CPP_FEATURES}")
@@ -74,10 +64,6 @@ lug_set_option(BUILD_SHARED_LIBS TRUE BOOL "TRUE to build Lugdunum as shared lib
 lug_set_option(BUILD_TESTS FALSE BOOL "TRUE to enable unit tests, FALSE to disable unit tests")
 lug_set_option(BUILD_DOCUMENTATION FALSE BOOL "Create and install the HTML based API documentation (requires Doxygen)" ${DOXYGEN_FOUND})
 lug_set_option(CI_BUILD FALSE BOOL "TRUE to enable CI platform includes")
-
-if(NOT BUILD_SHARED_LIBS)
-    add_definitions(-DLUG_STATIC)
-endif()
 
 # enable project folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
